@@ -1,15 +1,18 @@
 package be.kdg.sa.bakery.controller;
 
 import be.kdg.sa.bakery.controller.dto.ProductDto;
+import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -29,5 +32,25 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Product was successfully created");
     }
 
+    @GetMapping("/")
+    public String getAllProducts(Model model){
+        List<Product> products = productService.getAllProducts();
+
+        if(products.isEmpty()){
+            model.addAttribute("products", Collections.emptyList());
+        }  else{
+            List<ProductDto> productDtos = products.stream().map(this::convertToProductDto).toList();
+            model.addAttribute("products", productDtos);
+        }
+        return "/overview";
+    }
+
+    private ProductDto convertToProductDto (Product product){
+        return new ProductDto(
+                product.getProductId(),
+                product.getName(),
+                product.getDescription()
+        );
+    }
 
 }

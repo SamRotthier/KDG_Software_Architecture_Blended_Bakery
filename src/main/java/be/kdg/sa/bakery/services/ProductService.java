@@ -6,6 +6,9 @@ import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,5 +33,9 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
 
         return productRepository.save(product);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

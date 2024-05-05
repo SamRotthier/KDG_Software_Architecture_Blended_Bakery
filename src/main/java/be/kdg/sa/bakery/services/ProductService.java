@@ -3,6 +3,7 @@ package be.kdg.sa.bakery.services;
 import be.kdg.sa.bakery.controller.ProductController;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
 import be.kdg.sa.bakery.domain.Product;
+import be.kdg.sa.bakery.domain.ProductState;
 import be.kdg.sa.bakery.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,16 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public void changeProductState(UUID uuid){
+        Product product = productRepository.findById(uuid).orElse(null);
+        //add errorHandling
+        if(product == null){
+            return;
+        }
+
+        product.setProductState(product.getProductState() == ProductState.ACTIVE ? ProductState.INACTIVE : ProductState.ACTIVE);
+        productRepository.save(product);
     }
 }

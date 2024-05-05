@@ -33,7 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public String getAllProducts(Model model){
+    public String showProducts(Model model){
         List<Product> products = productService.getAllProducts();
 
         if(products.isEmpty()){
@@ -45,11 +45,18 @@ public class ProductController {
         return "/overview";
     }
 
+    @PostMapping("/{productid}/update-state")
+    public String changeProductState(Model model, @PathVariable UUID productid){
+        productService.changeProductState(productid);
+        return "/"+productid;
+    }
+
     private ProductDto convertToProductDto (Product product){
         return new ProductDto(
                 product.getProductId(),
                 product.getName(),
-                product.getDescription()
+                product.getDescription(),
+                product.getProductState()
         );
     }
 

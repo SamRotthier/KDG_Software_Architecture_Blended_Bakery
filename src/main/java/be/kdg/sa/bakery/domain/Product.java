@@ -14,6 +14,9 @@ public class Product {
     private String name;
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private ProductState productState;
+
     public Product() {
     }
 
@@ -51,5 +54,13 @@ public class Product {
             throw new IllegalArgumentException("Enter a description.");
         }
         this.description = description;
+    }
+
+    public ProductState getProductState() {
+        return productState;
+    }
+
+    public void setProductState(ProductState productState) {
+        this.productState = productState;
     }
 }

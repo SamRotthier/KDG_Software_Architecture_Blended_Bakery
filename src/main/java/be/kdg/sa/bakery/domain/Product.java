@@ -1,12 +1,12 @@
 package be.kdg.sa.bakery.domain;
 
+import be.kdg.sa.bakery.domain.Enum.ProductState;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "ba_product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,6 +1,6 @@
 package be.kdg.sa.bakery.controller.dto;
 
-import be.kdg.sa.bakery.domain.ProductState;
+import be.kdg.sa.bakery.domain.Enum.ProductState;
 
 import java.io.Serializable;
 import java.util.UUID;

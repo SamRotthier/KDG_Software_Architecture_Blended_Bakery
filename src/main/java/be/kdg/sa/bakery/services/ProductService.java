@@ -1,15 +1,12 @@
 package be.kdg.sa.bakery.services;
 
-import be.kdg.sa.bakery.controller.ProductController;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
 import be.kdg.sa.bakery.domain.Product;
-import be.kdg.sa.bakery.domain.ProductState;
+import be.kdg.sa.bakery.domain.Enum.ProductState;
 import be.kdg.sa.bakery.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

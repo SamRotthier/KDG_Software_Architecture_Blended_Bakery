@@ -1,4 +1,4 @@
-package be.kdg.sa.bakery.domain;
+package be.kdg.sa.bakery.domain.Enum;
 
 public enum ProductState {
     ACTIVE, INACTIVE

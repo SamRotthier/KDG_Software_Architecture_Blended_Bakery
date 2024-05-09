@@ -5,6 +5,7 @@ import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +15,7 @@ import jakarta.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
@@ -24,10 +25,7 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            return ResponseEntity.badRequest().body("Invalid request body");
-        }
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto){
         productService.createProduct(productDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product was successfully created");
     }

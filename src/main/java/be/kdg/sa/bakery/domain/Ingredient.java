@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ba-ingredient")
+@Table(name = "ba_ingredient")
 public class Ingredient {
 
     @Id
@@ -22,6 +22,10 @@ public class Ingredient {
 
     public Ingredient(UUID id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Ingredient(String name) {
         this.name = name;
     }
 

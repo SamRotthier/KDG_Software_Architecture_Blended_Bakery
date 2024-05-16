@@ -13,5 +13,21 @@
 </head>
 <body>
 <header th:insert="~{fragments/navbar.html :: nav}"></header>
+<main id="homesection">
+    <section class="container">
+        <div class="row align-items-lg-center justify-content-lg-between">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Welcome to the bakery application of B-MaC</h1>
+                <p class="fs-5 mb-4">Here you will be able to create new products in the most convenient way. You will be able to choose a name, enter a description and link a recipe with the required ingredients.</p>
+            </div>
+            <div class="col-lg-5 text-center">
+                <div class="position-relative">
+                    <img class="img-fluid position-relative z-2" src="/images/donuts.png" alt="donuts">
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="footer" th:insert="~{fragments/footer.html :: div}"></footer>
 </body>
 </html>

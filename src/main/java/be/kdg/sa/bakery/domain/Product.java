@@ -3,6 +3,7 @@ package be.kdg.sa.bakery.domain;
 import be.kdg.sa.bakery.domain.Enum.ProductState;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,6 +14,9 @@ public class Product {
     private UUID productId;
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductIngredient> ingredients;
 
     @Enumerated(EnumType.STRING)
     private ProductState productState;
@@ -62,5 +66,13 @@ public class Product {
 
     public void setProductState(ProductState productState) {
         this.productState = productState;
+    }
+
+    public List<ProductIngredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<ProductIngredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

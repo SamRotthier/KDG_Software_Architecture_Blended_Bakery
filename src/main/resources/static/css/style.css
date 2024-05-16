@@ -4,3 +4,7 @@ body {
     font-family: 'Poppins', sans-serif;
     /* background: linear-gradient(144.39deg, #ffffff -278.56%, #6d6d6d -78.47%, #11101d 91.61%);*/
 }
+
+h1 {
+    text-shadow: 2px 4px 6px #d9d8d8;
+}

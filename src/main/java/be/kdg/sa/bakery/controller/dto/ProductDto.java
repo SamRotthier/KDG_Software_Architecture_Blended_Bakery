@@ -1,20 +1,24 @@
 package be.kdg.sa.bakery.controller.dto;
 
 import be.kdg.sa.bakery.domain.Enum.ProductState;
+import be.kdg.sa.bakery.domain.ProductIngredient;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 public class ProductDto implements Serializable {
     private UUID productId;
     private String name;
     private String description;
+    private List<ProductIngredientDto> ingredients;
     private ProductState productState;
 
-    public ProductDto(UUID productId, String name, String description, ProductState productState) {
+    public ProductDto(UUID productId, String name, String description, List<ProductIngredientDto> ingredients, ProductState productState) {
         this.productId = productId;
         this.name = name;
         this.description = description;
+        this.ingredients = ingredients;
         this.productState = productState;
     }
 

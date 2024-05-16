@@ -2,6 +2,7 @@ package be.kdg.sa.bakery.controller;
 
 import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
+import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
 import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.services.ProductService;
 import org.slf4j.Logger;
@@ -85,6 +86,7 @@ public class ProductController {
                 product.getProductId(),
                 product.getName(),
                 product.getDescription(),
+                product.getIngredients().stream().map(i -> new ProductIngredientDto(i.getIngredient().getId(), i.getIngredient().getName(), i.getQuantity())).toList(),
                 product.getProductState()
         );
     }

@@ -56,4 +56,12 @@ public class ProductDto implements Serializable {
     public void setProductState(ProductState productState) {
         this.productState = productState;
     }
+
+    public List<ProductIngredientDto> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<ProductIngredientDto> ingredients) {
+        this.ingredients = ingredients;
+    }
 }

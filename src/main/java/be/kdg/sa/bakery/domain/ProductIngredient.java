@@ -1,17 +1,21 @@
 package be.kdg.sa.bakery.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ba_product_ingredient")
-public class ProductIngredient {
+public class ProductIngredient implements Serializable {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     @ManyToOne
     private Product product;
-    @Id
+
     @ManyToOne
     private Ingredient ingredient;
     private int quantity;
@@ -23,6 +27,14 @@ public class ProductIngredient {
         this.product = product;
         this.ingredient = ingredient;
         this.quantity = quantity;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Product getProduct() {

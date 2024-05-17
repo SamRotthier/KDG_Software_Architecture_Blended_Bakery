@@ -19,8 +19,9 @@
     <table class="table table-bordered shadow p-3 mb-5">
         <thead class="table-dark">
             <tr>
-                <th class="col-3 p-3">Name</th>
-                <th class="col-4 p-3">Description</th>
+                <th class="col-2 p-3">Name</th>
+                <th class="col-3 p-3">Description</th>
+                <th class="col-1 p-3 text-center">Ingredients</th>
                 <th class="col-1 p-3 text-center">Product Page</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
             <tr th:each="product : ${products}">
                 <td class="p-4" th:text="${product.name}"></td>
                 <td class="p-4" th:text="${product.description}"></td>
+                <td class="text-center p-4" th:text="${#lists.size(product.ingredients)}"></td>
                 <td class="text-center p-3">
                     <a class="btn btn-dark" th:href="@{/products/{id}(id=${product.productId})}">More info</a>
                 </td>

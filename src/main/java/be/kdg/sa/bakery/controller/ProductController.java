@@ -62,6 +62,27 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/{id}/edit")
+    public String getEditProduct(Model model, @PathVariable UUID id){
+        Optional <Product> optionalProduct = productService.getProductById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            ProductDto productDto = convertToProductDto(product);
+            model.addAttribute("editProduct", productDto);
+            return "products/editProduct";
+        } else{
+            return "redirect:/"; // to check error catch
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateProduct(@Valid @ModelAttribute ("editProduct") ProductDto productDto, @PathVariable UUID id){
+        Product product = productService.editProduct(productDto);
+        //error handling
+
+        return "redirect:/products/" +product.getProductId();
+    }
+
     @GetMapping("")
     public String showProducts(Model model){
         List<Product> products = productService.getAllProducts();

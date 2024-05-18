@@ -1,6 +1,7 @@
 package be.kdg.sa.bakery.controller.dto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,15 +9,17 @@ public class NewProductDto {
     private String name;
     private String description;
     private Map<UUID, Integer> ingredients;
+    private List<RecipeStepDto> recipeSteps;
 
-    public NewProductDto(String name, String description, Map<UUID, Integer> ingredients) {
+    public NewProductDto(String name, String description, Map<UUID, Integer> ingredients, List<RecipeStepDto> recipeSteps) {
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
+        this.recipeSteps = recipeSteps;
     }
 
     public NewProductDto() {
-        this(null, null, new HashMap<>());
+
     }
 
     public String getName() {
@@ -41,5 +44,13 @@ public class NewProductDto {
 
     public void setIngredients(Map<UUID, Integer> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public List<RecipeStepDto> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+    public void setRecipeSteps(List<RecipeStepDto> recipeSteps) {
+        this.recipeSteps = recipeSteps;
     }
 }

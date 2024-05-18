@@ -1,6 +1,7 @@
 package be.kdg.sa.bakery.domain;
 
 import be.kdg.sa.bakery.domain.Enum.ProductState;
+import be.kdg.sa.bakery.domain.Enum.RecipeState;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,16 +19,23 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductIngredient> ingredients;
 
+    @OneToMany(mappedBy = "product")
+    private List<RecipeStep> recipeSteps;
+
     @Enumerated(EnumType.STRING)
     private ProductState productState;
+
+    @Enumerated(EnumType.STRING)
+    private RecipeState recipeState;
 
     public Product() {
     }
 
-    public Product(UUID productId, String name, String description) {
-        this.productId = productId;
+    public Product(String name, String description, ProductState productState, RecipeState recipeState) {
         this.name = name;
         this.description = description;
+        this.productState = productState;
+        this.recipeState = recipeState;
     }
 
     public UUID getProductId() {
@@ -74,5 +82,21 @@ public class Product {
 
     public void setIngredients(List<ProductIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public List<RecipeStep> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
+    public RecipeState getRecipeState() {
+        return recipeState;
+    }
+
+    public void setRecipeState(RecipeState recipeState) {
+        this.recipeState = recipeState;
     }
 }

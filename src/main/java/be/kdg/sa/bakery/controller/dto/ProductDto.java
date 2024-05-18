@@ -1,7 +1,7 @@
 package be.kdg.sa.bakery.controller.dto;
 
 import be.kdg.sa.bakery.domain.Enum.ProductState;
-import be.kdg.sa.bakery.domain.ProductIngredient;
+import be.kdg.sa.bakery.domain.Enum.RecipeState;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,13 +12,19 @@ public class ProductDto implements Serializable {
     private String name;
     private String description;
     private List<ProductIngredientDto> ingredients;
+
+    private List<RecipeStepDto> recipeSteps;
+
+    private RecipeState recipeState;
     private ProductState productState;
 
-    public ProductDto(UUID productId, String name, String description, List<ProductIngredientDto> ingredients, ProductState productState) {
+    public ProductDto(UUID productId, String name, String description, List<ProductIngredientDto> ingredients, List<RecipeStepDto> recipeSteps, RecipeState recipeState, ProductState productState) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
+        this.recipeSteps = recipeSteps;
+        this.recipeState = recipeState;
         this.productState = productState;
     }
 
@@ -63,5 +69,21 @@ public class ProductDto implements Serializable {
 
     public void setIngredients(List<ProductIngredientDto> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public List<RecipeStepDto> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+    public void setRecipeSteps(List<RecipeStepDto> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
+    public RecipeState getRecipeState() {
+        return recipeState;
+    }
+
+    public void setRecipeState(RecipeState recipeState) {
+        this.recipeState = recipeState;
     }
 }

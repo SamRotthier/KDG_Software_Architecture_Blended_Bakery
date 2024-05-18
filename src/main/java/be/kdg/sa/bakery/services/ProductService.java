@@ -2,29 +2,32 @@ package be.kdg.sa.bakery.services;
 
 import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
+import be.kdg.sa.bakery.controller.dto.RecipeStepDto;
+import be.kdg.sa.bakery.domain.Enum.RecipeState;
 import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.domain.Enum.ProductState;
 import be.kdg.sa.bakery.domain.ProductIngredient;
+import be.kdg.sa.bakery.domain.RecipeStep;
 import be.kdg.sa.bakery.repositories.IngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductIngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductRepository;
+import be.kdg.sa.bakery.repositories.RecipeStepRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final IngredientRepository ingredientRepository;
     private final ProductIngredientRepository productIngredientRepository;
+    private final RecipeStepRepository recipeStepRepository;
 
-    public ProductService(ProductRepository productRepository, IngredientRepository ingredientRepository, ProductIngredientRepository productIngredientRepository) {
+    public ProductService(ProductRepository productRepository, IngredientRepository ingredientRepository, ProductIngredientRepository productIngredientRepository, RecipeStepRepository recipeStepRepository) {
         this.productRepository = productRepository;
         this.ingredientRepository = ingredientRepository;
         this.productIngredientRepository = productIngredientRepository;
+        this.recipeStepRepository = recipeStepRepository;
     }
 
     public Product createProduct(NewProductDto productDto) {
@@ -39,10 +42,16 @@ public class ProductService {
         product.setProductId(UUID.randomUUID());
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
+        product.setRecipeState(RecipeState.IN_PROGRESS);
+        product.setProductState(ProductState.INACTIVE);
         Map<UUID, Integer> ingredients = productDto.getIngredients();
         if(ingredients != null){
             productIngredientRepository.saveAll(ingredients.entrySet().stream().map(entry -> new ProductIngredient(product, ingredientRepository.findById(entry.getKey()).orElseThrow(), entry.getValue())).toList());
 
+        }
+        List<RecipeStepDto> steps = productDto.getRecipeSteps();
+        if(steps != null){
+            recipeStepRepository.saveAll(steps.stream().map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), product)).toList());
         }
 
         return productRepository.save(product);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/ingredients")
@@ -29,8 +30,9 @@ public class IngredientController {
     }
 
     @PostMapping("/new")
-    public String addNewIngredient(@Valid @ModelAttribute("newIngredientDto") NewIngredientDto newIngredientDto){
+    public String addNewIngredient(@Valid @ModelAttribute("newIngredientDto") NewIngredientDto newIngredientDto, RedirectAttributes redirectAttributes){
         ingredientService.createIngredient(newIngredientDto.getName());
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("successMessage", "Ingredient saved successfully!");
+        return "redirect:new";
     }
 }

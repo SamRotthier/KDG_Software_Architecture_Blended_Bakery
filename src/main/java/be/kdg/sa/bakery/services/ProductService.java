@@ -12,12 +12,16 @@ import be.kdg.sa.bakery.repositories.IngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductIngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductRepository;
 import be.kdg.sa.bakery.repositories.RecipeStepRepository;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class ProductService {
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final IngredientRepository ingredientRepository;
     private final ProductIngredientRepository productIngredientRepository;
@@ -31,12 +35,17 @@ public class ProductService {
     }
 
     public Product createProduct(NewProductDto productDto) {
+        logger.info("creating product: {}", productDto);
         if (productDto == null){
+            logger.error("Product data is null");
             throw new IllegalArgumentException("Product data cannot be null");
         }
         if (productRepository.existsByName(productDto.getName())){
+            logger.error("Product with the same name already exists: {}", productDto.getName());
             throw new IllegalArgumentException("Product with the same name already exists");
         }
+
+
 
         Product product = new Product();
         product.setProductId(UUID.randomUUID());
@@ -44,17 +53,21 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
         product.setRecipeState(RecipeState.IN_PROGRESS);
         product.setProductState(ProductState.INACTIVE);
+        Product savedProduct = productRepository.save(product);
+        logger.info("Product saved with Id: {}", savedProduct.getProductId());
+
         Map<UUID, Integer> ingredients = productDto.getIngredients();
         if(ingredients != null){
-            productIngredientRepository.saveAll(ingredients.entrySet().stream().map(entry -> new ProductIngredient(product, ingredientRepository.findById(entry.getKey()).orElseThrow(), entry.getValue())).toList());
+            logger.info("Saving product ingredients: {}", ingredients);
+            productIngredientRepository.saveAll(ingredients.entrySet().stream().map(entry -> new ProductIngredient(savedProduct, ingredientRepository.findById(entry.getKey()).orElseThrow(), entry.getValue())).toList());
 
         }
         List<RecipeStepDto> steps = productDto.getRecipeSteps();
         if(steps != null){
-            recipeStepRepository.saveAll(steps.stream().map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), product)).toList());
+            logger.info("Saving product recipe steps: {}", steps);
+            recipeStepRepository.saveAll(steps.stream().map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), savedProduct)).toList());
         }
-
-        return productRepository.save(product);
+        return savedProduct;
     }
 
     public List<Product> getAllProducts() {
@@ -73,7 +86,26 @@ public class ProductService {
     }
 
     public Optional<Product> getProductById(UUID id) {
-        return productRepository.findById(id);
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if(productOptional.isPresent()){
+            Product product = productOptional.get();
+            List<RecipeStep> steps = recipeStepRepository.findByProductId(id);
+            List<ProductIngredient> ingredients = productIngredientRepository.findByProductId(id);
+
+            System.out.println("Ingredients:");
+            int count = 0;
+            for (ProductIngredient ingredient : product.getIngredients()) {
+                System.out.println(count+"), Quantity: " + ingredient.getQuantity());
+                count++;
+            }
+
+            product.setRecipeSteps(steps);
+            product.setIngredients(ingredients);
+            return Optional.of(product);
+        } else{
+            return Optional.empty();
+        }
     }
 
     public Product editProduct(ProductDto productDto) {

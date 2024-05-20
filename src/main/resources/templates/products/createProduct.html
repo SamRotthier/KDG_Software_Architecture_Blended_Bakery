@@ -59,7 +59,20 @@
                         </tr>
                         </thead>
                         <tbody id="recipe-step-table">
-
+                        <tr>
+                            <td class="form text-center p-3">
+                                <input class="form-control" type="hidden" th:field="*{recipeSteps[0].step}">
+                                <span>1</span>
+                            </td>
+                            <td class="form p-3">
+                                <div>
+                                    <input class="form-control p-3" id="step" type="text" placeholder="Step" th:field="*{recipeSteps[0].description}">
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="deleteRow(this)">Delete</button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     <div class="d-flex flex-row flex-nowrap justify-content-end">

@@ -41,6 +41,11 @@ public class ProductController {
     @PostMapping("/createProduct")
     public String createProduct(@Valid @ModelAttribute("newProductDto") NewProductDto productDto){
         logger.debug("Received request to create product: {}", productDto);
+        System.out.println("New Product Name: " + productDto.getName());
+        System.out.println("New Product Description: " + productDto.getDescription());
+        System.out.println("Ingredients: " + productDto.getIngredients());
+        System.out.println("Recipe Steps: " + productDto.getRecipeSteps());
+
         Product product = productService.createProduct(productDto);
         if(product == null){
             logger.warn("Product creation failed.");

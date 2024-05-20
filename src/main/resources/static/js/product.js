@@ -23,6 +23,7 @@ function addIngredient(){
     console.log("start event")
     //ingredient
     let ingredientTable = document.getElementById("ingredient-table")
+    let count = ingredientTable.rows.length;
 
     let tr = document.createElement("tr");
     let ingredientData = document.createElement("td")
@@ -30,6 +31,8 @@ function addIngredient(){
     let ingredientSelect = document.createElement("select")
 
     ingredientSelect.classList.add("form-select", "ingredient-select")
+    ingredientSelect.setAttribute("th:value", "${ingredient.quantity}")
+    ingredientSelect.setAttribute("th:name", "ingredients[" + count + "].name")
     let defaultOption = document.createElement("option")
     defaultOption.innerText = "Select an ingredient"
     defaultOption.setAttribute("class", "text-muted")
@@ -53,11 +56,14 @@ function addIngredient(){
     quantityInput.type = "number"
     quantityInput.placeholder = "Quantity"
     quantityInput.classList.add("form-control")
+    quantityInput.setAttribute("th:value", "${ingredient.quantity}")
+    quantityInput.setAttribute("th:name", "ingredients[" + count + "].quantity");
     quantityData.appendChild(quantityInput)
 
     tr.appendChild(ingredientData)
     tr.appendChild(quantityData)
     tr.appendChild(deleteButton())
+    tr.setAttribute('th:each', 'ingredient : ${newProductDto.ingredients}')
     ingredientTable.appendChild(tr)
     console.log("end event")
 }
@@ -70,14 +76,13 @@ function addRecipeStep(){
     let stepData = document.createElement("td")
     let stepInput = document.createElement("input")
     stepInput.type = "hidden"
-    stepInput.value = (count+1).toString()
-    stepInput.name = "steps["+count+"].step"
+    stepInput.setAttribute("th:value", (count + 1).toString());
+    stepInput.setAttribute('th:name', 'recipeSteps[' + count + '].step');
     stepData.appendChild(stepInput)
 
     let stepSpan = document.createElement("span")
     stepSpan.innerText = (count + 1).toString()
     stepData.appendChild(stepSpan)
-    stepData.setAttribute("name", "steps[" + count + "].step")
     stepData.classList.add("text-center", "p-3")
 
 
@@ -88,14 +93,15 @@ function addRecipeStep(){
     descrInput.classList.add("form-control")
     descrInput.type="text"
     descrInput.placeholder="Step"
-    descrInput.id="steps["+count+ "].text"
-    descrInput.name = "steps["+count+ "].text"
+    descrInput.setAttribute("th:value", "${recipeSteps[" + count + "].description}");
+    descrInput.setAttribute("th:name", "recipeSteps[" + count + "].description")
     descrDiv.appendChild(descrInput)
     descrData.appendChild(descrDiv)
 
     tr.appendChild(stepData)
     tr.appendChild(descrData)
     tr.appendChild(deleteButton())
+    tr.setAttribute('th:each', 'step : ${newProductDto.recipeSteps}');
     recipeTable.appendChild(tr)
 }
 

@@ -16,7 +16,7 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> products;
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus orderStatus;
     private UUID accountId;
     private Instant creationTimestamp;
     private Instant bakedTimestamp;
@@ -28,7 +28,7 @@ public class Order {
         this.id = id;
         this.accountId = accountId;
         this.creationTimestamp = creationTimestamp;
-        this.status = OrderStatus.PENDING;
+        this.orderStatus = OrderStatus.PENDING;
     }
 
     public UUID getId() {
@@ -47,12 +47,12 @@ public class Order {
         this.products = products;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setOrderStatus(OrderStatus status) {
+        this.orderStatus = status;
     }
 
     public UUID getAccountId() {

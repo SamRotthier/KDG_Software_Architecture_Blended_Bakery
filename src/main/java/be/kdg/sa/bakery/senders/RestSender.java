@@ -6,10 +6,7 @@ import be.kdg.sa.bakery.controller.dto.OrderDto;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,6 +14,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/send")
 public class RestSender {
 
     private static final Logger logger = LoggerFactory.getLogger(RestSender.class);
@@ -46,7 +44,7 @@ public class RestSender {
         logger.info("Delivery message was successfully posted to the PRODUCT_STATE_QUEUE for UUID: {}", uuid);
     }
 
-    @PostMapping("/ChangeProductState/{uuid}")
+    @PostMapping("/OrderIngredients/{uuid}")
     public void sendOrderIngredients(@RequestBody OrderDto orderDto) throws JsonProcessingException {
         //logger.debug("Trying to send Order ingredients message for order: {}", orderDto.getid);
         //rabbitTemplate.convertAndSend(RabbitTopology.PRODUCT_STATE_QUEUE, "PRODUCT_STATE_QUEUE",

@@ -2,6 +2,7 @@ package be.kdg.sa.bakery.receivers;
 
 import be.kdg.sa.bakery.config.RabbitTopology;
 import be.kdg.sa.bakery.controller.dto.OrderDto;
+import be.kdg.sa.bakery.services.BakingService;
 import be.kdg.sa.bakery.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,11 @@ public class OrderReceiver {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderReceiver.class);
     private final OrderService orderService;
+    private final BakingService bakingService;
 
-    public OrderReceiver(OrderService orderService) {
+    public OrderReceiver(OrderService orderService, BakingService bakingService) {
         this.orderService = orderService;
+        this.bakingService = bakingService;
     }
 
     @RabbitListener(queues = RabbitTopology.ORDER_PRODUCT_QUEUE, messageConverter = "#{jackson2JsonMessageConverter}")
@@ -32,5 +35,4 @@ public class OrderReceiver {
         //logger.info("Received a new order delivery with id: {}", orderDto.getId());
         //orderService.addDeliveryFromMessage(orderDto);
     }
-
 }

@@ -22,8 +22,8 @@ public class OrderReceiver {
 
     @RabbitListener(queues = RabbitTopology.ORDER_PRODUCT_QUEUE, messageConverter = "#{jackson2JsonMessageConverter}")
     public void receiveNewOrderProduct(OrderDto orderDto) {
-        //logger.info("Received a new order message with id: {}", orderDto.getId());
-        //orderService.addOrderFromMessage(orderDto);
+        logger.info("Received a new order message with id: {}", orderDto.getId());
+        orderService.addOrder(orderDto);
     }
 
 

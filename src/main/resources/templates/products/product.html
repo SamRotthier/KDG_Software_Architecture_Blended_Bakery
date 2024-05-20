@@ -21,8 +21,37 @@
                     <h1 th:text="${product.name}"></h1>
                 </div>
             </div>
-            <div class="d-flex flex-column flex-nowrap">
-                <p class="text-muted" th:text="${product.description}"></p>
+            <div class="d-flex flex-row flex-nowrap justify-end gap-2"
+                 th:with="RecipeState=${T(be.kdg.sa.bakery.domain.Enum.RecipeState)}">
+                <div th:if="${RecipeState.IN_PROGRESS.name() == product.recipeState.name()}">
+                    <form action="#" th:action="@{'/products/' + ${product.productId} + '/recipeState'}" th:object="${product}" method="post">
+                        <input type="hidden" id="id" name="id"
+                               th:value="${product.productId}">
+                        <button class="btn btn-info" type="submit" id="finalize-recipe">Finalize recipe</button>
+                    </form>
+                </div>
+                <div th:with="ProductState=${T(be.kdg.sa.bakery.domain.Enum.ProductState)}" th:if="${RecipeState.FINALIZED.name() == product.recipeState.name()}">
+                    <div th:if="${ProductState.ACTIVE.name() == product.productState.name()}">
+                        <form action="#" th:action="@{'/products/' + ${product.productId} + '/productState'}" th:object="${product}" method="post">
+                            <input type="hidden" id="deactivate" name="id"
+                                   th:value="${product.productId}">
+                            <button class="btn btn-danger" type="submit" id="disable-product">Deactivate product
+                            </button>
+                        </form>
+                    </div>
+                    <div th:if="${ProductState.INACTIVE.name() == product.productState.name()}">
+                        <form action="#" th:action="@{'/products/' + ${product.productId} + '/productState'}" th:object="${product}" method="post">
+                            <input type="hidden" id="activate" name="id"
+                                   th:value="${product.productId}">
+                            <button class="btn btn-info" type="submit" id="enable-product">Activate product
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-nowrap my-5">
+                <h4 class="mb-3">Description</h4>
+                <p class="text-muted mb-5" th:text="${product.description}"></p>
                 <table class="table table-bordered shadow p-3 mb-5">
                     <thead class="table-dark">
                     <tr>

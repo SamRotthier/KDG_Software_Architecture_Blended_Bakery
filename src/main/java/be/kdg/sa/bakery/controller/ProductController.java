@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
+import java.net.PortUnreachableException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -102,10 +103,19 @@ public class ProductController {
         return "products/products";
     }
 
-    @PostMapping("/{productid}/update-state")
-    public String changeProductState(Model model, @PathVariable UUID productid){
-        productService.changeProductState(productid);
-        return "/"+productid;
+    @PostMapping("/{id}/recipeState")
+    public String updateRecipeState(@ModelAttribute("product") ProductDto productDto, @PathVariable UUID id){
+        logger.info("start finalize recipe");
+        productService.finalizeRecipe(id);
+        return "redirect:/products/"+id;
+
+    }
+
+    @PostMapping("/{id}/productState")
+    public String changeProductState(@ModelAttribute("product") ProductDto productDto, @PathVariable UUID id){
+        logger.info("start change product state");
+        productService.changeProductState(id);
+        return "redirect:/products/"+id;
     }
 
     private ProductDto convertToProductDto (Product product){

@@ -74,10 +74,11 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void changeProductState(UUID uuid){
-        Product product = productRepository.findById(uuid).orElse(null);
+    public void changeProductState(UUID id){
+        Product product = productRepository.findById(id).orElse(null);
         //add errorHandling
         if(product == null){
+            logger.warn("Product with id {} was not found", id);
             return;
         }
 
@@ -116,5 +117,19 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
 
         return productRepository.save(product);
+    }
+
+    @Transactional
+    public void finalizeRecipe(UUID id) {
+        logger.info("retrieve product");
+        Product product = productRepository.findById(id).orElse(null);
+        if(product == null){
+            logger.warn("Product with id={} was not found", id);
+            return;
+        }
+        product.setRecipeState(RecipeState.FINALIZED);
+        logger.info("RecipeState changed.");
+        productRepository.save(product);
+        //send product to rabbitMq
     }
 }

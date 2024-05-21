@@ -3,6 +3,7 @@ package be.kdg.sa.bakery.services;
 import be.kdg.sa.bakery.domain.Enum.OrderStatus;
 import be.kdg.sa.bakery.domain.Order;
 import be.kdg.sa.bakery.repositories.OrderRepository;
+import be.kdg.sa.bakery.senders.RestSender;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,11 @@ import java.util.*;
 public class BakingService {
     private static final Logger logger = LoggerFactory.getLogger(BakingService.class);
     private final OrderRepository orderRepository;
+    private final RestSender restSender;
 
-    public BakingService(OrderRepository orderRepository) {
+    public BakingService(OrderRepository orderRepository, RestSender restSender) {
         this.orderRepository = orderRepository;
+        this.restSender = restSender;
     }
 
     @Scheduled(cron = "${be.kdg.cron}")
@@ -43,6 +46,7 @@ public class BakingService {
             });
             //TODO
             //orderIngredients Rabbit
+            // restSender.sendOrderIngredients(ingredients);
             order.setOrderStatus(OrderStatus.AWAITING_INGREDIENTS);
             orderRepository.save(order);
         }

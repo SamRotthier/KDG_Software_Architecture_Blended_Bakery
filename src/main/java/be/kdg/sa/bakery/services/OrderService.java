@@ -52,4 +52,7 @@ public class OrderService {
     public void bakeAllOpenOrders() {
         bakingService.bakingPreparations();
     }
+
+    public void addDeliveredIngredients(OrderDto orderDto) {
+    }
 }

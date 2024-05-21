@@ -108,7 +108,6 @@ public class ProductController {
         logger.info("start finalize recipe");
         productService.finalizeRecipe(id);
         return "redirect:/products/"+id;
-
     }
 
     @PostMapping("/{id}/productState")

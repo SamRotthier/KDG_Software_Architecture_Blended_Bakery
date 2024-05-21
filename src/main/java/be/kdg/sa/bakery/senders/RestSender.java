@@ -4,6 +4,8 @@ import be.kdg.sa.bakery.config.RabbitTopology;
 import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.controller.dto.OrderDto;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
+import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
+import be.kdg.sa.bakery.domain.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +29,13 @@ public class RestSender {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping("/Product")
-    public void sendNewProduct(@RequestBody ProductDto productDto) throws JsonProcessingException {
-        logger.debug("Trying to send new product message for product: {}", productDto.getName());
+   /* @PostMapping("/Product")
+    public void sendNewProduct(@RequestBody Product product) {
+        logger.debug("Trying to send new product message for product: {}", product.getName());
         rabbitTemplate.convertAndSend(RabbitTopology.NEW_PRODUCT_QUEUE, "NEW_PRODUCT_QUEUE",
-                objectMapper.writeValueAsString(new NewProductMessage(productDto.getProductId(), productDto.getName(), productDto.getIngredients())));
-        logger.info("Delivery message was successfully posted to the NEW_PRODUCT_QUEUE for product: {} ", productDto.getName());
-    }
+                objectMapper.writeValueAsString(new NewProductMessage(product.getProductId(), product.getName(), product.getIngredients().stream().map(i -> new ProductIngredientDto(i.getIngredient().getId(), i.getIngredient().getName(), i.getQuantity())).toList())));
+        logger.info("Delivery message was successfully posted to the NEW_PRODUCT_QUEUE for product: {} ", product.getName());
+    } */
 
     @PostMapping("/ChangeProductState/{uuid}")
     public void sendChangeProductState(@PathVariable UUID uuid) throws JsonProcessingException {

@@ -12,7 +12,6 @@ public class NewProductMessage {
     private String name;
     private List<ProductIngredientDto> ingredients;
 
-    @Autowired
     public NewProductMessage(UUID productId, String name, List<ProductIngredientDto> ingredients) {
         this.productId = productId;
         this.name = name;

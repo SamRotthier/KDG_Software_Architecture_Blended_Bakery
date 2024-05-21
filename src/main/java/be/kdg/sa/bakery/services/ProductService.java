@@ -12,6 +12,8 @@ import be.kdg.sa.bakery.repositories.IngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductIngredientRepository;
 import be.kdg.sa.bakery.repositories.ProductRepository;
 import be.kdg.sa.bakery.repositories.RecipeStepRepository;
+import be.kdg.sa.bakery.senders.RestSender;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +28,14 @@ public class ProductService {
     private final IngredientRepository ingredientRepository;
     private final ProductIngredientRepository productIngredientRepository;
     private final RecipeStepRepository recipeStepRepository;
+    private RestSender restSender;
 
-    public ProductService(ProductRepository productRepository, IngredientRepository ingredientRepository, ProductIngredientRepository productIngredientRepository, RecipeStepRepository recipeStepRepository) {
+    public ProductService(ProductRepository productRepository, IngredientRepository ingredientRepository, ProductIngredientRepository productIngredientRepository, RecipeStepRepository recipeStepRepository, RestSender restSender) {
         this.productRepository = productRepository;
         this.ingredientRepository = ingredientRepository;
         this.productIngredientRepository = productIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
+        this.restSender = restSender;
     }
 
     public Product createProduct(NewProductDto productDto) {
@@ -44,8 +48,6 @@ public class ProductService {
             logger.error("Product with the same name already exists: {}", productDto.getName());
             throw new IllegalArgumentException("Product with the same name already exists");
         }
-
-
 
         Product product = new Product();
         product.setProductId(UUID.randomUUID());
@@ -74,15 +76,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void changeProductState(UUID id){
+    public void changeProductState(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
-        //add errorHandling
         if(product == null){
             logger.warn("Product with id {} was not found", id);
             return;
         }
-
         product.setProductState(product.getProductState() == ProductState.ACTIVE ? ProductState.INACTIVE : ProductState.ACTIVE);
+        // restSender.sendChangeProductState(id);
         productRepository.save(product);
     }
 
@@ -116,6 +117,8 @@ public class ProductService {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
 
+        //TODO
+
         return productRepository.save(product);
     }
 
@@ -130,6 +133,6 @@ public class ProductService {
         product.setRecipeState(RecipeState.FINALIZED);
         logger.info("RecipeState changed.");
         productRepository.save(product);
-        //send product to rabbitMq
+        //restSender.sendNewProduct(product);
     }
 }

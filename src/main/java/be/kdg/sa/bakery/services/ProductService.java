@@ -83,7 +83,7 @@ public class ProductService {
             return;
         }
         product.setProductState(product.getProductState() == ProductState.ACTIVE ? ProductState.INACTIVE : ProductState.ACTIVE);
-        // restSender.sendChangeProductState(id);
+        restSender.sendChangeProductState(id);
         productRepository.save(product);
     }
 
@@ -133,6 +133,6 @@ public class ProductService {
         product.setRecipeState(RecipeState.FINALIZED);
         logger.info("RecipeState changed.");
         productRepository.save(product);
-        //restSender.sendNewProduct(product);
+        restSender.sendNewProduct(product);
     }
 }

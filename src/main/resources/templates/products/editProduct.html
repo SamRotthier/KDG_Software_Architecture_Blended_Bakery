@@ -9,11 +9,88 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/product.js}"></script>
 </head>
 <body>
 <header th:insert="~{fragments/navbar.html :: nav}"></header>
 
 <main class="container">
+    <div class="card mt-4 p-3">
+        <div class="card-body">
+            <div class="w-100 my-3">
+                <div class="d-flex flex-row flex-nowrap justify-content-between">
+                    <h1>Edit Product</h1>
+                </div>
+            </div>
+            <form th:action="@{'/products/' + ${editProduct.productId} + '/edit'}" th:object="${editProduct}" method="post">
+                <div class="w-100 my-4 d-flex flex-column flex-nowrap">
+                    <input type="hidden" id="id" name="id"
+                           th:value="${editProduct.productId}">
+                    <div class="form mb-4">
+                        <label class="form-label text-muted required" for="name"><strong>Name</strong></label>
+                        <input class="form-control p-3" placeholder="Enter a name" type="text" id="name" name="name"
+                               th:value="${editProduct.name}">
+                    </div>
+                    <div class="form mb-4">
+                        <label class="form-label text-muted" for="description"><strong>Description</strong></label>
+                        <input class="form-control p-3" type="text" placeholder="Enter a description" id="description"
+                               name="description" th:value="${editProduct.description}">
+
+                    </div>
+                </div>
+                <h4 class="mt-2">Ingredients</h4>
+                <div class="d-flex flex-column flex-nowrap my-4">
+                    <table class="table table-bordered shadow p-3 mb-5">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="col-3 p-3">Ingredient</th>
+                                <th class="col-3 p-3">Quantity</th>
+                                <th class="col-2 p-3 text-center">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ingredient-table">
+                            <tr th:each="ingredient : ${editProduct.ingredients}">
+                                <td th:text="${ingredient.name}"></td>
+                                <td th:text="${ingredient.quantity}"></td>
+                                <td><button class="btn btn-sm btn-danger mt-3" type="button"
+                                             onclick="removeRow(this)">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex flex-row flex-nowrap justify-content-end">
+                        <button class="btn btn-primary" type="button" id="add-ingredient-btn">Add Ingredient</button>
+                    </div>
+                    <h4 class="mt-3">Recipe</h4>
+                    <div class="d-flex flex-column flex-nowrap my-4">
+                        <table class="table table table-bordered table-striped shadow p-3 mb-5">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="col-1 p-3 text-center">Step</th>
+                                    <th class="col-8 p-3">Description</th>
+                                    <th class="col-2 p-3 text-center">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recipe-step-table">
+                                <tr th:each="step : ${editProduct.recipeSteps}">
+                                    <td class="text-center p-3" th:text="${step.step}+1"></td>
+                                    <td class="p-3" th:text="${step.description}"></td>
+                                    <td class="text-center p-3"><button class="btn btn-sm btn-danger" type="button"
+                                                onclick="removeRow(this)">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex flex-row flex-nowrap justify-content-end">
+                        <button class="btn btn-primary" type="button" id="add-step-btn">Add Step</button>
+                    </div>
+                </div>
+                <div class="mt-5 d-flex flex-row flex-nowrap justify-content-end">
+                    <button class="btn btn-danger me-3" type="reset">Clear</button>
+                    <button class="btn btn-success" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </main>
 <footer class="footer" th:insert="~{fragments/footer.html :: div}"></footer>
 </body>

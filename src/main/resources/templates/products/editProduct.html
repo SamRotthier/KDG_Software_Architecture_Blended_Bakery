@@ -49,11 +49,23 @@
                             </tr>
                         </thead>
                         <tbody id="ingredient-table">
-                            <tr th:each="ingredient : ${editProduct.ingredients}">
-                                <td th:text="${ingredient.name}"></td>
-                                <td th:text="${ingredient.quantity}"></td>
-                                <td><button class="btn btn-sm btn-danger mt-3" type="button"
-                                             onclick="removeRow(this)">Delete</button></td>
+                            <tr th:each="ingredient, ingredientStat : ${editProduct.ingredients}">
+                                <td class="p-3">
+                                    <div class="form">
+                                        <select th:id="'ingredients[' + ${ingredientStat.index} + '].text}'"
+                                                class="form-select ingredient-select"
+                                                th:value="${ingredient.id}">
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="p-3">
+                                    <div class="form">
+                                        <input class="form-control" type="number" placeholder="Quantity" th:id="'ingredients[\'' + ${ingredient.id} + '\'].quantity'" th:name="'ingredients[\'' + ${ingredient.id} + '\']'" th:value="${ingredient.quantity}">
+                                    </div>
+                                </td>
+                                <td class="text-center p-3"><button class="btn btn-sm btn-danger mt-3" type="button"
+                                             onclick="deleteRow(this)">Delete</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -71,11 +83,22 @@
                                 </tr>
                             </thead>
                             <tbody id="recipe-step-table">
-                                <tr th:each="step : ${editProduct.recipeSteps}">
-                                    <td class="text-center p-3" th:text="${step.step}+1"></td>
-                                    <td class="p-3" th:text="${step.description}"></td>
+                                <tr th:each="step, stepStat : ${editProduct.recipeSteps}">
+                                    <td class="text-center p-4">
+                                        <input type=hidden th:id="'recipeSteps[]'+ ${step.id} +'].text'" th:name="'recipeSteps[' + ${stepStat.index} + '].step'" th:value="${step.step}">
+                                        <span th:text="${step.step}+1"></span>
+                                    </td>
+                                    <td class="p-3">
+                                        <div class="form">
+                                            <input th:id="'recipeSteps[' + ${step.id} + '].step'" type="text"
+                                                   class="form-control"
+                                                   placeholder="Description"
+                                                   th:name="'recipeSteps[' + ${stepStat.index} + '].text'"
+                                                   th:value="${step.description}">
+                                        </div>
+                                    </td>
                                     <td class="text-center p-3"><button class="btn btn-sm btn-danger" type="button"
-                                                onclick="removeRow(this)">Delete</button></td>
+                                                onclick="deleteRow(this)">Delete</button></td>
                                 </tr>
                             </tbody>
                         </table>

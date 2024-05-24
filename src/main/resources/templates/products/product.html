@@ -74,7 +74,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="step : ${product.recipeSteps}">
-                        <td th:text="${step.step}+1"></td>
+                        <td th:text="${step.step}"></td>
                         <td th:text="${step.description}"></td>
                     </tr>
                     </tbody>

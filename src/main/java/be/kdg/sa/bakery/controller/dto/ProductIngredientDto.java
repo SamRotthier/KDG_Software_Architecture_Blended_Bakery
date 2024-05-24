@@ -11,8 +11,12 @@ public class ProductIngredientDto implements Serializable {
     public ProductIngredientDto() {
     }
 
+    public ProductIngredientDto(String name, Integer quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public ProductIngredientDto(UUID id, String name, Integer quantity) {
-        this.id = id;
         this.name = name;
         this.quantity = quantity;
     }

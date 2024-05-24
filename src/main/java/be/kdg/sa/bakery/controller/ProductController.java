@@ -1,10 +1,8 @@
 package be.kdg.sa.bakery.controller;
 
-import be.kdg.sa.bakery.controller.dto.NewProductDto;
-import be.kdg.sa.bakery.controller.dto.ProductDto;
-import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
-import be.kdg.sa.bakery.controller.dto.RecipeStepDto;
+import be.kdg.sa.bakery.controller.dto.*;
 import be.kdg.sa.bakery.domain.Product;
+import be.kdg.sa.bakery.services.IngredientService;
 import be.kdg.sa.bakery.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,27 +23,38 @@ import java.util.stream.Collectors;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
+    private final IngredientService ingredientService;
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, IngredientService ingredientService) {
         this.productService = productService;
+        this.ingredientService = ingredientService;
     }
 
-
-   @GetMapping("/createProduct")
+    @GetMapping("/createProduct")
     public String getNewProduct(Model model){
         NewProductDto newProductDto = new NewProductDto();
+
+        //set step numbers of recipeSteps
+        List<RecipeStepDto> recipeSteps = new ArrayList<>();
+        for (int i = 1; i <= 7; i++) {
+            RecipeStepDto recipeStepDto = new RecipeStepDto();
+            recipeStepDto.setStep(i);
+            recipeSteps.add(recipeStepDto);
+        }
+        newProductDto.setRecipeSteps(recipeSteps);
+
+        //List of ingredients fetched for option selection
+        List<IngredientDto> ingredientsList= ingredientService.getIngredients().stream().map(i -> new IngredientDto(i.getId(), i.getName())).toList();
+
         model.addAttribute("newProductDto", newProductDto);
+        model.addAttribute("ingredientList", ingredientsList);
         return "products/createProduct";
     }
 
     @PostMapping("/createProduct")
     public String createProduct(@Valid @ModelAttribute("newProductDto") NewProductDto productDto){
         logger.debug("Received request to create product: {}", productDto);
-        System.out.println("New Product Name: " + productDto.getName());
-        System.out.println("New Product Description: " + productDto.getDescription());
-        System.out.println("Ingredients: " + productDto.getIngredients());
-        System.out.println("Recipe Steps: " + productDto.getRecipeSteps());
 
         Product product = productService.createProduct(productDto);
         if(product == null){

@@ -1,7 +1,6 @@
 package be.kdg.sa.bakery.controller;
 
 import be.kdg.sa.bakery.controller.dto.NewIngredientDto;
-import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.domain.Ingredient;
 import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.services.IngredientService;

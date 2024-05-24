@@ -2,8 +2,10 @@ package be.kdg.sa.bakery.services;
 
 import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.controller.dto.ProductDto;
+import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
 import be.kdg.sa.bakery.controller.dto.RecipeStepDto;
 import be.kdg.sa.bakery.domain.Enum.RecipeState;
+import be.kdg.sa.bakery.domain.Ingredient;
 import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.domain.Enum.ProductState;
 import be.kdg.sa.bakery.domain.ProductIngredient;
@@ -58,16 +60,19 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
         logger.info("Product saved with Id: {}", savedProduct.getProductId());
 
-        Map<UUID, Integer> ingredients = productDto.getIngredients();
+        List<ProductIngredientDto> ingredients = productDto.getIngredients();
+        System.out.println("Ingredients:");
+        System.out.println(product.getIngredients());
         if(ingredients != null){
             logger.info("Saving product ingredients: {}", ingredients);
-            productIngredientRepository.saveAll(ingredients.entrySet().stream().map(entry -> new ProductIngredient(savedProduct, ingredientRepository.findById(entry.getKey()).orElseThrow(), entry.getValue())).toList());
+            productIngredientRepository.saveAll(ingredients.stream().filter(i -> i.getId() != null).map(i -> new ProductIngredient(savedProduct, ingredientRepository.findById(i.getId()).orElseThrow(), i.getQuantity())).toList());
 
         }
         List<RecipeStepDto> steps = productDto.getRecipeSteps();
+        System.out.println("Step value: " + productDto.getRecipeSteps().get(2));
         if(steps != null){
             logger.info("Saving product recipe steps: {}", steps);
-            recipeStepRepository.saveAll(steps.stream().map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), savedProduct)).toList());
+            recipeStepRepository.saveAll(steps.stream().filter(step -> step.getDescription() != null && !step.getDescription().isEmpty()).map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), savedProduct)).toList());
         }
         return savedProduct;
     }

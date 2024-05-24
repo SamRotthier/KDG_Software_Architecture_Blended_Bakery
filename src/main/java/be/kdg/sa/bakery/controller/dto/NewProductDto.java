@@ -8,10 +8,10 @@ import java.util.UUID;
 public class NewProductDto {
     private String name;
     private String description;
-    private Map<UUID, Integer> ingredients;
+    private List<ProductIngredientDto> ingredients;
     private List<RecipeStepDto> recipeSteps;
 
-    public NewProductDto(String name, String description, Map<UUID, Integer> ingredients, List<RecipeStepDto> recipeSteps) {
+    public NewProductDto(String name, String description, List<ProductIngredientDto> ingredients, List<RecipeStepDto> recipeSteps) {
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
@@ -38,11 +38,11 @@ public class NewProductDto {
         this.description = description;
     }
 
-    public Map<UUID, Integer> getIngredients() {
+    public List<ProductIngredientDto> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Map<UUID, Integer> ingredients) {
+    public void setIngredients(List<ProductIngredientDto> ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -1,9 +1,7 @@
 package be.kdg.sa.bakery.senders;
 
 import be.kdg.sa.bakery.config.RabbitTopology;
-import be.kdg.sa.bakery.controller.dto.NewProductDto;
 import be.kdg.sa.bakery.controller.dto.OrderDto;
-import be.kdg.sa.bakery.controller.dto.ProductDto;
 import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
 import be.kdg.sa.bakery.domain.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;

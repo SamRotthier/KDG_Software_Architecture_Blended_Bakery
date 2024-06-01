@@ -78,6 +78,7 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
+        logger.info("Retrieving all products");
         return productRepository.findAll();
     }
 
@@ -93,6 +94,7 @@ public class ProductService {
     }
 
     public Optional<Product> getProductById(UUID id) {
+        logger.info("Retrieving product by id: {}", id);
         Optional<Product> productOptional = productRepository.findById(id);
 
         if(productOptional.isPresent()){
@@ -100,23 +102,20 @@ public class ProductService {
             List<RecipeStep> steps = recipeStepRepository.findByProductId(id);
             List<ProductIngredient> ingredients = productIngredientRepository.findByProductId(id);
 
-            System.out.println("Ingredients:");
-            int count = 0;
-            for (ProductIngredient ingredient : product.getIngredients()) {
-                System.out.println(count+"), Quantity: " + ingredient.getQuantity());
-                count++;
-            }
+            logger.debug("Ingredients: {}", product.getIngredients());
 
             product.setRecipeSteps(steps);
             product.setIngredients(ingredients);
             return Optional.of(product);
         } else{
+            logger.warn("Product with id {} was not found", id);
             return Optional.empty();
         }
     }
 
     public Product editProduct(ProductDto productDto) {
-        //error handling
+        logger.info("Editing product: {}", productDto);
+
         Product product = new Product();
         product.setProductId(productDto.getProductId());
         product.setName(productDto.getName());
@@ -124,6 +123,7 @@ public class ProductService {
 
         //TODO
 
+        logger.info("Product edited with id: {}", product.getProductId());
         return productRepository.save(product);
     }
 

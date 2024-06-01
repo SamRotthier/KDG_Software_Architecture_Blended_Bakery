@@ -34,6 +34,7 @@ public class OrderService {
     }
 
     public void addOrder(OrderDto orderDto) {
+        logger.info("Adding new order with ID: {}", orderDto.getId());
         Order order = new Order(orderDto.getId(), orderDto.getAccountId(), orderDto.getCreationDate());
         Order savedOrder = orderRepository.save(order);
         List<Product> productList = productRepository.findByProductIdIn(orderDto.getProductQuantities().keySet().stream().toList());
@@ -42,17 +43,22 @@ public class OrderService {
 
     @Transactional
     public List<Order> getAllOpenOrders() {
+        logger.info("Fetching all open orders");
         return orderRepository.findByOrderStatusOrderByCreationTimestamp(OrderStatus.PENDING);
     }
 
     public void bakeOrder(UUID id) {
+        logger.info("Baking preparations for order ID: {}", id);
         bakingService.bakingPreparationsOneOrder(id);
     }
 
     public void bakeAllOpenOrders() {
+        logger.info("Baking preparations for all open orders");
         bakingService.bakingPreparations();
     }
 
     public void addDeliveredIngredients(OrderDto orderDto) {
+        logger.info("Adding delivered ingredients for order ID: {}", orderDto.getId());
+        //TODO
     }
 }

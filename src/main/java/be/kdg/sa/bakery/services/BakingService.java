@@ -46,7 +46,7 @@ public class BakingService {
             });
             //TODO
             //orderIngredients Rabbit
-            // restSender.sendOrderIngredients(ingredients);
+            //restSender.sendOrderIngredients(ingredients);
             order.setOrderStatus(OrderStatus.AWAITING_INGREDIENTS);
             orderRepository.save(order);
         }

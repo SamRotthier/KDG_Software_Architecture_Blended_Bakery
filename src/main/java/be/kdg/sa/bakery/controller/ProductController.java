@@ -85,7 +85,20 @@ public class ProductController {
             Product product = optionalProduct.get();
             ProductDto productDto = convertToProductDto(product);
             model.addAttribute("editProduct", productDto);
+
+            //set step numbers of recipeSteps
+            List<RecipeStepDto> recipeSteps = new ArrayList<>();
+            for (int i = 1; i <= 7; i++) {
+                RecipeStepDto recipeStepDto = new RecipeStepDto();
+                recipeStepDto.setStep(i);
+                recipeSteps.add(recipeStepDto);
+            }
+            productDto.setRecipeSteps(recipeSteps);
+
+            //List of ingredients fetched for option selection
+            List<IngredientDto> ingredientsList;
             return "products/editProduct";
+            //model.addAttribute("ingredientList", ingredientsList);
         } else{
             return "redirect:/"; // to check error catch
         }

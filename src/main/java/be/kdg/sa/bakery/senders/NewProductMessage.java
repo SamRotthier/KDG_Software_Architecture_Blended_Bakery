@@ -8,13 +8,37 @@ import java.util.List;
 import java.util.UUID;
 
 public class NewProductMessage {
-    private UUID productId;
-    private String name;
-    private List<ProductIngredientDto> ingredients;
+    public UUID productId;
+    public String name;
+    public List<ProductIngredientDto> ingredients;
 
     public NewProductMessage(UUID productId, String name, List<ProductIngredientDto> ingredients) {
         this.productId = productId;
         this.name = name;
+        this.ingredients = ingredients;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ProductIngredientDto> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<ProductIngredientDto> ingredients) {
         this.ingredients = ingredients;
     }
 }

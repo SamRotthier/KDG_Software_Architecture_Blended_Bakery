@@ -52,9 +52,20 @@
                             <tr th:each="ingredient, ingredientStat : ${editProduct.ingredients}">
                                 <td class="p-3">
                                     <div class="form">
-                                        <select th:id="'ingredients[' + ${ingredientStat.index} + '].text}'"
+                                        <select th:id="'ingredients[' + ${ingredientStat.index} + '].id}'"
                                                 class="form-select ingredient-select"
                                                 th:value="${ingredient.id}">
+                                            <option th:each="option : ${ingredientList}"
+                                                    th:value="${option.id}"
+                                                    th:text="${option.name}">
+                                            </option>
+                                        </select>
+                                        <select class="form-select ingredient-select" th:field="*{ingredients[0].id}">
+                                            <option class="text-muted" value="">Select an ingredient</option>
+                                            <option th:each="option : ${ingredientList}"
+                                                    th:value="${option.id}"
+                                                    th:text="${option.name}">
+                                            </option>
                                         </select>
                                     </div>
                                 </td>
@@ -86,7 +97,7 @@
                                 <tr th:each="step, stepStat : ${editProduct.recipeSteps}">
                                     <td class="text-center p-4">
                                         <input type=hidden th:id="'recipeSteps[]'+ ${step.id} +'].text'" th:name="'recipeSteps[' + ${stepStat.index} + '].step'" th:value="${step.step}">
-                                        <span th:text="${step.step}+1"></span>
+                                        <span th:text="${step.step}"></span>
                                     </td>
                                     <td class="p-3">
                                         <div class="form">

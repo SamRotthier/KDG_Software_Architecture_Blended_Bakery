@@ -29,7 +29,7 @@ public class RestSender {
 
     public void sendNewProduct(Product product) {
         logger.debug("Trying to send new product message for product: {}", product.getName());
-        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "NEW_PRODUCT_QUEUE",
+        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "new-product-queue",
                 (new NewProductMessage(product.getProductId(), product.getName(), product.getIngredients().stream().map(i -> new ProductIngredientDto(i.getIngredient().getId(), i.getIngredient().getName(), i.getQuantity())).toList())));
         logger.info("Delivery message was successfully posted to the NEW_PRODUCT_QUEUE for product: {} ", product.getName());
     }
@@ -38,7 +38,7 @@ public class RestSender {
     public void sendChangeProductState(UUID uuid) {
         logger.debug("Trying to sendDelivery message for UUID: {}", uuid);
 
-        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "PRODUCT_STATE_QUEUE", uuid);
+        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "product-state-queue", uuid);
         logger.info("Delivery message was successfully posted to the PRODUCT_STATE_QUEUE for UUID: {}", uuid);
     }
 

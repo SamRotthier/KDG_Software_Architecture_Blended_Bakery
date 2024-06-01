@@ -30,7 +30,7 @@ public class RabbitTopology {
     //this is a new deliver queue
     @Bean
     public Queue newOrderIngredientQueue() {
-        return new Queue(ORDER_INGREDIENT_QUEUE, true);
+        return new Queue(ORDER_INGREDIENT_QUEUE, false);
     }
 
     @Bean
@@ -40,7 +40,7 @@ public class RabbitTopology {
 
     @Bean
     public Queue newProductStateQueue() {
-        return new Queue(PRODUCT_STATE_QUEUE, true);
+        return new Queue(PRODUCT_STATE_QUEUE, false);
     }
 
     @Bean
@@ -50,7 +50,7 @@ public class RabbitTopology {
 
     @Bean
     public Queue newProductQueue() {
-        return new Queue(NEW_PRODUCT_QUEUE, true);
+        return new Queue(NEW_PRODUCT_QUEUE, false);
     }
 
     @Bean
@@ -60,7 +60,7 @@ public class RabbitTopology {
 
     @Bean
     public Queue newDeliverQueue() {
-        return new Queue(DELIVER_QUEUE, true);
+        return new Queue(DELIVER_QUEUE, false);
     }
 
     @Bean
@@ -70,7 +70,7 @@ public class RabbitTopology {
 
     @Bean
     public Queue newOrderProductQueue() {
-        return new Queue(ORDER_PRODUCT_QUEUE, true);
+        return new Queue(ORDER_PRODUCT_QUEUE, false);
     }
 
 

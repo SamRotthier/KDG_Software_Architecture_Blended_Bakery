@@ -61,8 +61,7 @@ public class ProductService {
         logger.info("Product saved with Id: {}", savedProduct.getProductId());
 
         List<ProductIngredientDto> ingredients = productDto.getIngredients();
-        System.out.println("Ingredients:");
-        System.out.println(product.getIngredients());
+
         if(ingredients != null){
             logger.info("Saving product ingredients: {}", ingredients);
             productIngredientRepository.saveAll(ingredients.stream().filter(i -> i.getId() != null).map(i -> new ProductIngredient(savedProduct, ingredientRepository.findById(i.getId()).orElseThrow(), i.getQuantity())).toList());

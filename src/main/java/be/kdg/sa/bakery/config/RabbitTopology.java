@@ -15,7 +15,8 @@ public class RabbitTopology {
 
     public final static String ORDER_INGREDIENT_QUEUE = "order-ingredient-queue";
     public final static String PRODUCT_STATE_QUEUE = "product-state-queue";
-    public final static String NEW_PRODUCT_QUEUE = "new-product-queue";
+    public final static String NEW_PRODUCT_WAREHOUSE_QUEUE = "new-product-warehouse-queue";
+    public final static String NEW_PRODUCT_CLIENT_QUEUE = "new-product-client-queue";
     public final static String DELIVER_QUEUE = "deliver-queue";
     public final static String ORDER_PRODUCT_QUEUE = "order-product-queue";
 
@@ -49,13 +50,23 @@ public class RabbitTopology {
     }
 
     @Bean
-    public Queue newProductQueue() {
-        return new Queue(NEW_PRODUCT_QUEUE, false);
+    public Queue newProductWarehouseQueue() {
+        return new Queue(NEW_PRODUCT_WAREHOUSE_QUEUE, false);
     }
 
     @Bean
-    public Binding topicNewProductBinding() {
-        return BindingBuilder.bind(newProductQueue()).to(topicExchange()).with(NEW_PRODUCT_QUEUE);
+    public Binding topicNewProductWarehouseBinding() {
+        return BindingBuilder.bind(newProductWarehouseQueue()).to(topicExchange()).with(NEW_PRODUCT_WAREHOUSE_QUEUE);
+    }
+
+    @Bean
+    public Queue newProductClientQueue() {
+        return new Queue(NEW_PRODUCT_CLIENT_QUEUE, false);
+    }
+
+    @Bean
+    public Binding topicNewProductClientBinding() {
+        return BindingBuilder.bind(newProductClientQueue()).to(topicExchange()).with(NEW_PRODUCT_CLIENT_QUEUE);
     }
 
     @Bean

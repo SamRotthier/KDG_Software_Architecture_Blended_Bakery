@@ -1,26 +1,32 @@
 package be.kdg.sa.bakery.controller.dto;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class OrderDto {
-    private UUID id;
+    private UUID orderId;
+    private List<OrderProductDto> products;
     private UUID accountId;
-
-    private Map<UUID, Integer> productQuantities;
-
-    private Instant creationDate;
 
     public OrderDto() {
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getOrderId() {
+        return orderId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<OrderProductDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<OrderProductDto> products) {
+        this.products = products;
     }
 
     public UUID getAccountId() {
@@ -29,21 +35,5 @@ public class OrderDto {
 
     public void setAccountId(UUID accountId) {
         this.accountId = accountId;
-    }
-
-    public Map<UUID, Integer> getProductQuantities() {
-        return productQuantities;
-    }
-
-    public void setProductQuantities(Map<UUID, Integer> productQuantities) {
-        this.productQuantities = productQuantities;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
     }
 }

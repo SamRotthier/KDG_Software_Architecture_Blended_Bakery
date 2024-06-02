@@ -68,7 +68,6 @@ public class ProductService {
 
         }
         List<RecipeStepDto> steps = productDto.getRecipeSteps();
-        System.out.println("Step value: " + productDto.getRecipeSteps().get(2));
         if(steps != null){
             logger.info("Saving product recipe steps: {}", steps);
             recipeStepRepository.saveAll(steps.stream().filter(step -> step.getDescription() != null && !step.getDescription().isEmpty()).map(step -> new RecipeStep(step.getId(), step.getStep(), step.getDescription(), savedProduct)).toList());

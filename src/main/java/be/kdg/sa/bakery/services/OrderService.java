@@ -34,11 +34,11 @@ public class OrderService {
     }
 
     public void addOrder(OrderDto orderDto) {
-        logger.info("Adding new order with ID: {}", orderDto.getId());
-        Order order = new Order(orderDto.getId(), orderDto.getAccountId(), orderDto.getCreationDate());
-        Order savedOrder = orderRepository.save(order);
-        List<Product> productList = productRepository.findByProductIdIn(orderDto.getProductQuantities().keySet().stream().toList());
-        orderProductRepository.saveAll(productList.stream().map(p -> new OrderProduct(p, savedOrder, orderDto.getProductQuantities().get(p.getProductId()))).toList());
+        logger.info("Adding new order with ID: {}", orderDto.getOrderId());
+        // Order order = new Order(orderDto.getOrderId(), orderDto.getAccountId());
+        // Order savedOrder = orderRepository.save(order);
+        // List<Product> productList = productRepository.findByProductIdIn(orderDto.getProductQuantities().keySet().stream().toList());
+        //orderProductRepository.saveAll(productList.stream().map(p -> new OrderProduct(p, savedOrder, orderDto.getProductQuantities().get(p.getProductId()))).toList());
     }
 
     @Transactional

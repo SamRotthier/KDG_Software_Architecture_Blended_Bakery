@@ -18,6 +18,11 @@ public class NewProductMessage {
         this.ingredients = ingredients;
     }
 
+    public NewProductMessage(UUID productId, String name) {
+        this.productId = productId;
+        this.name = name;
+    }
+
     public UUID getProductId() {
         return productId;
     }

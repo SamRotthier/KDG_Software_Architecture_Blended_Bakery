@@ -2,6 +2,7 @@ package be.kdg.sa.bakery.domain;
 
 import be.kdg.sa.bakery.domain.Enum.OrderStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.List;
@@ -13,22 +14,22 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<OrderProduct> products;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     private UUID accountId;
+    @CreationTimestamp
     private Instant creationTimestamp;
     private Instant bakedTimestamp;
 
     public Order() {
     }
 
-    public Order(UUID id, UUID accountId, Instant creationTimestamp) {
+    public Order(UUID id, UUID accountId) {
         this.id = id;
         this.accountId = accountId;
-        this.creationTimestamp = creationTimestamp;
-        this.orderStatus = OrderStatus.PENDING;
+        this.orderStatus = OrderStatus.OPEN;
     }
 
     public UUID getId() {

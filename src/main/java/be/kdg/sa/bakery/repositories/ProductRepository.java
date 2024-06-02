@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     boolean existsByName(String name);
 
+    @Query("SELECT p FROM Product p WHERE p.productId IN :ids")
     List<Product> findByProductIdIn(@Param("ids") List<UUID> ids);
 
 }

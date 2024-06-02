@@ -25,14 +25,14 @@ public class OrderReceiver {
 
     @RabbitListener(queues = RabbitTopology.ORDER_PRODUCT_QUEUE, messageConverter = "#{jackson2JsonMessageConverter}")
     public void receiveNewOrderProduct(OrderDto orderDto) {
-        logger.info("Received a new order message with id: {}", orderDto.getId());
+        logger.info("Received a new order message with id: {}", orderDto.getOrderId());
         orderService.addOrder(orderDto);
     }
 
 
     @RabbitListener(queues = RabbitTopology.DELIVER_QUEUE, messageConverter = "#{jackson2JsonMessageConverter}")
     public void receiveNewDelivery(OrderDto orderDto) {
-        logger.info("Received a new order delivery with id: {}", orderDto.getId());
+        logger.info("Received a new order delivery with id: {}", orderDto.getOrderId());
         orderService.addDeliveredIngredients(orderDto);
     }
 }

@@ -28,7 +28,7 @@ public class BakingService {
     @Transactional
     public void bakingPreparations() {
         logger.info("Starting the baking process");
-        List<Order> openOrders = orderRepository.findByOrderStatusOrderByCreationTimestamp(OrderStatus.PENDING);
+        List<Order> openOrders = orderRepository.findByOrderStatusOrderByCreationTimestamp(OrderStatus.OPEN);
 
         if (openOrders == null || openOrders.isEmpty()) {
             logger.warn("No open orders found for baking.");

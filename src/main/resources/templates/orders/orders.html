@@ -19,18 +19,20 @@
     <table class="table table-bordered shadow p-3 mb-5">
         <thead class="table-dark">
         <tr>
-            <th class="col-3 p-3">Order date</th>
-            <th class="col-3 p-3">Status</th>
-            <th class="col-2 p-3 text-center">Products</th>
+            <th class="col-2 p-3">Order date</th>
+            <th class="col-3 p-3">Order ID</th>
+            <th class="col-3 p-3">Client ID</th>
+            <th class="col-2 p-3 text-center">Status</th>
             <th class="col-2 p-3 text-center">Bake</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
-            <td class="p-4" th:text="${#dates.format(order.getCreationDate(),'dd/MM/yyyy HH:mm:ss')}"></td>
-            <td class="p-4" th:text="${order.getOrderStatus().name()}"></td>
-            <td class="text-center p-4" th:text="${#order.getProducts().size()}"></td>
-            <td class="text-center p-3">
+            <td class="p-4" th:text="${#dates.format(order.getCreationTimestamp(),'dd/MM/yyyy HH:mm:ss')}"></td>
+            <td class="p-4" th:text="${order.getId()}"></td>
+            <td class="p-4" th:text="${order.getAccountId()}"></td>
+            <td class="p-4 text-center" th:text="${order.getOrderStatus().name()}"></td>
+            <td class="text-center p-4">
                 <form action="#" th:action="@{/orders/bake/{id}(id=${order.id})}" method="post">
                     <button class="btn btn-primary" type="submit">Bake now</button>
                 </form>

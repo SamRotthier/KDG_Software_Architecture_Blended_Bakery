@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class ProductIngredientDto implements Serializable {
-    private UUID id;
+    private UUID ingredientId;
     private String name;
     private Integer quantity;
 
@@ -16,17 +16,18 @@ public class ProductIngredientDto implements Serializable {
         this.quantity = quantity;
     }
 
-    public ProductIngredientDto(UUID id, String name, Integer quantity) {
+    public ProductIngredientDto(UUID ingredientId, String name, Integer quantity) {
+        this.ingredientId = ingredientId;
         this.name = name;
         this.quantity = quantity;
     }
 
     public UUID getId() {
-        return id;
+        return ingredientId;
     }
 
     public void setId(UUID id) {
-        this.id = id;
+        this.ingredientId = id;
     }
 
     public String getName() {

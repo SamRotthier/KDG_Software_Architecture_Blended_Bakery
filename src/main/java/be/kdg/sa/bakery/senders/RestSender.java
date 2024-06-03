@@ -33,6 +33,7 @@ public class RestSender {
 
     public void sendNewProduct(Product product) {
         logger.info("Send new product message for product: {}", product.getName());
+        logger.info("Ingredient ID test: {}", product.getIngredients().stream().findFirst().orElse(new ProductIngredient()).getIngredient().getId());
         rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "new-product-warehouse-queue",
                 (new NewProductMessage(product.getProductId(), product.getName(), product.getIngredients().stream().map(i -> new ProductIngredientDto(i.getIngredient().getId(), i.getIngredient().getName(), i.getQuantity())).toList())));
         rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "new-product-client-queue",

@@ -38,12 +38,12 @@ public class BakingService {
         for (Order order : openOrders) {
             logger.info("Start baking process for open order with id: {}", order.getId());
 
-            Map<UUID, Integer> ingredients = new HashMap<>();
+            /* Map<UUID, Integer> ingredients = new HashMap<>();
             order.getProducts().forEach(p -> {
                 p.getProduct().getIngredients().forEach(i -> {
                     ingredients.put(i.getIngredient().getId(), i.getQuantity() * p.getQuantity());
                 });
-            });
+            });*/
             logger.info("Send request for ingredients to warehouse: {}", order.getId());
             restSender.sendOrderIngredients(order);
 
@@ -62,13 +62,13 @@ public class BakingService {
             Order order = optionalOrder.get();
             logger.info("Start baking process for the open order with id: {}", order.getId());
 
-            Map<UUID, Integer> ingredientsOrder = new HashMap<>();
+            /* Map<UUID, Integer> ingredientsOrder = new HashMap<>();
 
             order.getProducts().forEach(p -> {
                 p.getProduct().getIngredients().forEach(i -> {
                     ingredientsOrder.put(i.getIngredient().getId(), i.getQuantity() * p.getQuantity());
                 });
-            });
+            });*/
             logger.info("Send request for ingredients to warehouse: {}", order.getId());
             restSender.sendOrderIngredients(order);
 
@@ -80,7 +80,6 @@ public class BakingService {
         } else{
             logger.error("Order with Id {} was not found", id);
         }
-        //TODO
     }
 
     @Transactional

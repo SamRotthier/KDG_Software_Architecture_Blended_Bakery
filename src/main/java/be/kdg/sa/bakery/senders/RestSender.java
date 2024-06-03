@@ -59,19 +59,18 @@ public class RestSender {
     public Map<UUID, Integer> extractIngredients(List<OrderProduct> orderProducts) {
         Map<UUID, Integer> ingredientQuantityMap = new HashMap<>();
 
-        for (OrderProduct orderProduct : orderProducts) {
+        orderProducts.forEach(orderProduct -> {
             Product product = orderProduct.getProduct();
             int productQuantity = orderProduct.getQuantity();
 
-            List<ProductIngredient> ingredients = product.getIngredients();
-            for (ProductIngredient ingredient : ingredients) {
+            product.getIngredients().forEach(ingredient -> {
                 UUID ingredientId = ingredient.getIngredient().getId();
                 int ingredientQuantity = ingredient.getQuantity();
                 int totalIngredientQuantity = productQuantity * ingredientQuantity;
 
                 ingredientQuantityMap.put(ingredientId, ingredientQuantityMap.getOrDefault(ingredientId, 0) + totalIngredientQuantity);
-            }
-        }
+            });
+        });
         return ingredientQuantityMap;
     }
 }

@@ -21,7 +21,11 @@ public class Order {
     private UUID accountId;
     @CreationTimestamp
     private Instant creationTimestamp;
-    private Instant bakedTimestamp;
+    private Instant bakeStartTimestamp;
+
+    private Instant ingredientsReceivedTimestamp;
+
+    private Instant bakeFinishTimestamp;
 
     public Order() {
     }
@@ -72,11 +76,27 @@ public class Order {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public Instant getBakedTimestamp() {
-        return bakedTimestamp;
+    public Instant getBakeStartTimestamp() {
+        return bakeStartTimestamp;
     }
 
-    public void setBakedTimestamp(Instant bakedTimestamp) {
-        this.bakedTimestamp = bakedTimestamp;
+    public void setBakeStartTimestamp(Instant bakeStartTimestamp) {
+        this.bakeStartTimestamp = bakeStartTimestamp;
+    }
+
+    public Instant getBakeFinishTimestamp() {
+        return bakeFinishTimestamp;
+    }
+
+    public void setBakeFinishTimestamp(Instant bakeFinishTimestamp) {
+        this.bakeFinishTimestamp = bakeFinishTimestamp;
+    }
+
+    public Instant getIngredientsReceivedTimestamp() {
+        return ingredientsReceivedTimestamp;
+    }
+
+    public void setIngredientsReceivedTimestamp(Instant ingredientsReceivedTimestamp) {
+        this.ingredientsReceivedTimestamp = ingredientsReceivedTimestamp;
     }
 }

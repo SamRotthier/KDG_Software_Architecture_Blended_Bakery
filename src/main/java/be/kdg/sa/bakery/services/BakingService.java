@@ -36,7 +36,7 @@ public class BakingService {
         }
 
         for (Order order : openOrders) {
-            logger.debug("Found order with id {} in baking queue", order.getId());
+            logger.info("Start baking process for open order with id: {}", order.getId());
 
             Map<UUID, Integer> ingredients = new HashMap<>();
             order.getProducts().forEach(p -> {
@@ -44,9 +44,11 @@ public class BakingService {
                     ingredients.put(i.getIngredient().getId(), i.getQuantity() * p.getQuantity());
                 });
             });
-            //TODO
-            //orderIngredients Rabbit
-            //restSender.sendOrderIngredients(ingredients);
+            logger.info("Send request for ingredients to warehouse: {}", order.getId());
+            restSender.sendOrderIngredients(order);
+
+            logger.info("Update order information");
+            order.setBakeStartTimestamp(Instant.now());
             order.setOrderStatus(OrderStatus.AWAITING_INGREDIENTS);
             orderRepository.save(order);
         }
@@ -54,25 +56,45 @@ public class BakingService {
 
 
     public void bakingPreparationsOneOrder(UUID id) {
-        //TODO
-        //orderRepository.findById(id);
-    }
-
-    @Transactional
-    public void bakeOrder(UUID id){
-        //confirm message to warehouse of receiving ingredients
-        //TODO
         Optional<Order> optionalOrder = orderRepository.findById(id);
 
         if(optionalOrder.isPresent()){
             Order order = optionalOrder.get();
-            order.setBakedTimestamp(Instant.now());
+            logger.info("Start baking process for the open order with id: {}", order.getId());
+
+            Map<UUID, Integer> ingredientsOrder = new HashMap<>();
+
+            order.getProducts().forEach(p -> {
+                p.getProduct().getIngredients().forEach(i -> {
+                    ingredientsOrder.put(i.getIngredient().getId(), i.getQuantity() * p.getQuantity());
+                });
+            });
+            logger.info("Send request for ingredients to warehouse: {}", order.getId());
+            restSender.sendOrderIngredients(order);
+
+            logger.info("Update order information");
+            order.setBakeStartTimestamp(Instant.now());
+            order.setOrderStatus(OrderStatus.AWAITING_INGREDIENTS);
+            orderRepository.save(order);
+
+        } else{
+            logger.error("Order with Id {} was not found", id);
+        }
+        //TODO
+    }
+
+    @Transactional
+    public void finishBakeOrder(UUID id){
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+
+        if(optionalOrder.isPresent()){
+            Order order = optionalOrder.get();
+            order.setBakeFinishTimestamp(Instant.now());
             order.setOrderStatus(OrderStatus.DONE);
             orderRepository.save(order);
         } else{
             logger.error("Order with Id {} was not found", id);
         }
-        // other functionality?
 
     }
 }

@@ -1,10 +1,11 @@
 package be.kdg.sa.bakery.senders;
 
 import be.kdg.sa.bakery.config.RabbitTopology;
-import be.kdg.sa.bakery.controller.dto.OrderDto;
 import be.kdg.sa.bakery.controller.dto.ProductIngredientDto;
+import be.kdg.sa.bakery.domain.Order;
+import be.kdg.sa.bakery.domain.OrderProduct;
 import be.kdg.sa.bakery.domain.Product;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import be.kdg.sa.bakery.domain.ProductIngredient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -28,7 +32,7 @@ public class RestSender {
     }
 
     public void sendNewProduct(Product product) {
-        logger.debug("Trying to send new product message for product: {}", product.getName());
+        logger.info("Send new product message for product: {}", product.getName());
         rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "new-product-warehouse-queue",
                 (new NewProductMessage(product.getProductId(), product.getName(), product.getIngredients().stream().map(i -> new ProductIngredientDto(i.getIngredient().getId(), i.getIngredient().getName(), i.getQuantity())).toList())));
         rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "new-product-client-queue",
@@ -38,16 +42,36 @@ public class RestSender {
 
 
     public void sendChangeProductState(UUID uuid) {
-        logger.debug("Trying to sendDelivery message for UUID: {}", uuid);
-
         rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "product-state-queue", uuid);
-        logger.info("Delivery message was successfully posted to the PRODUCT_STATE_QUEUE for UUID: {}", uuid);
+        logger.info("The change of the product state was successfully posted to the PRODUCT_STATE_QUEUE for UUID: {}", uuid);
     }
 
-    public void sendOrderIngredients(OrderDto orderDto) {
-        //logger.debug("Trying to send Order ingredients message for order: {}", orderDto.getid);
-        // rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "PRODUCT_STATE_QUEUE",
-        //        objectMapper.writeValueAsString(new OrderIngredientMessage (OrderDto.getId, orderDto.getTimestamp, orderDto.getIngredientIt, orderDto.getAmountOrder)));
-        //logger.info("Delivery message was successfully posted to the PRODUCT_STATE_QUEUE for order: {}", orderDto.getid);
+    public void sendOrderIngredients(Order order) {
+        logger.info("Trying to send the order ingredients message for order ID: {}", order.getId());
+
+        //convert list product to map ingredients with quantities
+        Map<UUID, Integer> ingredients = extractIngredients(order.getProducts());
+
+        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "order-ingredient-queue", (new OrderIngredientsMessage (order.getId(), order.getBakeStartTimestamp(), ingredients)));
+        logger.info("Order ingredients message was successfully posted to the ORDER_INGREDIENT_QUEUE for order: {}", order.getId());
+    }
+
+    public Map<UUID, Integer> extractIngredients(List<OrderProduct> orderProducts) {
+        Map<UUID, Integer> ingredientQuantityMap = new HashMap<>();
+
+        for (OrderProduct orderProduct : orderProducts) {
+            Product product = orderProduct.getProduct();
+            int productQuantity = orderProduct.getQuantity();
+
+            List<ProductIngredient> ingredients = product.getIngredients();
+            for (ProductIngredient ingredient : ingredients) {
+                UUID ingredientId = ingredient.getIngredient().getId();
+                int ingredientQuantity = ingredient.getQuantity();
+                int totalIngredientQuantity = productQuantity * ingredientQuantity;
+
+                ingredientQuantityMap.put(ingredientId, ingredientQuantityMap.getOrDefault(ingredientId, 0) + totalIngredientQuantity);
+            }
+        }
+        return ingredientQuantityMap;
     }
 }

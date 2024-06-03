@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -81,8 +83,21 @@ public class OrderService {
         bakingService.bakingPreparations();
     }
 
-    public void addDeliveredIngredients(OrderDto orderDto) {
+    public void receiveDeliveredIngredients(OrderDto orderDto) {
         logger.info("Adding delivered ingredients for order ID: {}", orderDto.getOrderId());
-        //TODO
+
+        Optional<Order> optionalOrder = orderRepository.findById(orderDto.getOrderId());
+
+        if(optionalOrder.isPresent()){
+            Order order = optionalOrder.get();
+            order.setIngredientsReceivedTimestamp(Instant.now());
+            order.setOrderStatus(OrderStatus.INGREDIENTS_RECEIVED);
+            orderRepository.save(order);
+
+            //Finish baking of order
+            bakingService.finishBakeOrder(orderDto.getOrderId());
+        } else{
+            logger.error("Order with Id {} was not found", orderDto.getOrderId());
+        }
     }
 }

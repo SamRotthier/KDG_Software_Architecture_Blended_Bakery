@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public class OrderIngredientsMessage {
     public UUID id;
-    public Instant creationDate;
-    public Map<UUID, Integer> productQuantities;
+    public Instant bakeStartTimestamp;
+    public Map<UUID, Integer> ingredients;
 
-    public OrderIngredientsMessage(UUID id, Instant creationDate, Map<UUID, Integer> productQuantities) {
+    public OrderIngredientsMessage(UUID id, Instant bakeStartTimestamp, Map<UUID, Integer> ingredients) {
         this.id = id;
-        this.creationDate = creationDate;
-        this.productQuantities = productQuantities;
+        this.bakeStartTimestamp = bakeStartTimestamp;
+        this.ingredients = ingredients;
     }
 
     public UUID getId() {
@@ -23,19 +23,28 @@ public class OrderIngredientsMessage {
         this.id = id;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+
+    public Instant getBakeStartTimestamp() {
+        return bakeStartTimestamp;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setBakeStartTimestamp(Instant bakeStartTimestamp) {
+        this.bakeStartTimestamp = bakeStartTimestamp;
+    }
+
+    public Map<UUID, Integer> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Map<UUID, Integer> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public Map<UUID, Integer> getProductQuantities() {
-        return productQuantities;
+        return ingredients;
     }
 
-    public void setProductQuantities(Map<UUID, Integer> productQuantities) {
-        this.productQuantities = productQuantities;
+    public void setProductQuantities(Map<UUID, Integer> ingredients) {
+        this.ingredients = ingredients;
     }
 }

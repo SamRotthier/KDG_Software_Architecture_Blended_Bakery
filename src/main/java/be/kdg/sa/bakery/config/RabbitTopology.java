@@ -20,6 +20,8 @@ public class RabbitTopology {
     public final static String DELIVER_QUEUE = "deliver-queue";
     public final static String ORDER_PRODUCT_QUEUE = "order-product-queue";
 
+    public final static String CONFIRM_ORDER_INGREDIENT_QUEUE = "confirm-order-ingredient-queue";
+
     public static final String TOPIC_EXCHANGE = "bakery-exchange";
 
 
@@ -90,11 +92,22 @@ public class RabbitTopology {
         return BindingBuilder.bind(newOrderProductQueue()).to(topicExchange()).with(ORDER_PRODUCT_QUEUE);
     }
 
+    @Bean
+    public Queue newConfirmOrderIngredientQueue() {
+        return new Queue(CONFIRM_ORDER_INGREDIENT_QUEUE, false);
+    }
+
+    @Bean
+    public Binding topicConfirmOrderIngredientBinding() {
+        return BindingBuilder.bind(newConfirmOrderIngredientQueue()).to(topicExchange()).with(CONFIRM_ORDER_INGREDIENT_QUEUE);
+    }
+
 
     @Bean
     RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory){
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter());
+
         return rabbitTemplate;
     }
 

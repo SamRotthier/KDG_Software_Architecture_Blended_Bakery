@@ -1,14 +1,17 @@
 package be.kdg.sa.bakery.services;
 
 import be.kdg.sa.bakery.controller.dto.OrderDto;
+import be.kdg.sa.bakery.controller.dto.OrderMessageDto;
 import be.kdg.sa.bakery.controller.dto.OrderProductDto;
 import be.kdg.sa.bakery.domain.Enum.OrderStatus;
+import be.kdg.sa.bakery.domain.Enum.ReceivedOrderStatusWarehouse;
 import be.kdg.sa.bakery.domain.Order;
 import be.kdg.sa.bakery.domain.OrderProduct;
 import be.kdg.sa.bakery.domain.Product;
 import be.kdg.sa.bakery.repositories.OrderProductRepository;
 import be.kdg.sa.bakery.repositories.OrderRepository;
 import be.kdg.sa.bakery.repositories.ProductRepository;
+import be.kdg.sa.bakery.senders.RestSender;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +31,14 @@ public class OrderService {
     private ProductRepository productRepository;
 
     private BakingService bakingService;
+    private RestSender restSender;
 
-    public OrderService(OrderRepository orderRepository, OrderProductRepository orderProductRepository, ProductRepository productRepository, BakingService bakingService) {
+    public OrderService(OrderRepository orderRepository, OrderProductRepository orderProductRepository, ProductRepository productRepository, BakingService bakingService, RestSender restSender) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
         this.productRepository = productRepository;
         this.bakingService = bakingService;
+        this.restSender = restSender;
     }
 
     public void addOrder(OrderDto orderDto) {
@@ -54,13 +59,13 @@ public class OrderService {
         // Save all products in OrderProduct entities
         for (OrderProductDto productDto : orderDto.getProducts()) {
             Product product = products.stream().filter(p -> p.getProductId().equals((productDto.getProductId()))).findFirst().orElse(null);
-            if(product != null){
+            if (product != null) {
                 OrderProduct orderProduct = new OrderProduct();
                 orderProduct.setProduct(product);
                 orderProduct.setOrder(savedOrder);
                 orderProduct.setQuantity(productDto.getQuantity());
                 orderProductRepository.save(orderProduct);
-            } else{
+            } else {
                 logger.warn("Product with ID {} was not found in the database.", productDto.getProductId());
             }
         }
@@ -83,21 +88,32 @@ public class OrderService {
         bakingService.bakingPreparations();
     }
 
-    public void receiveDeliveredIngredients(OrderDto orderDto) {
-        logger.info("Adding delivered ingredients for order ID: {}", orderDto.getOrderId());
+    public void receiveDeliveredIngredients(OrderMessageDto orderMessageDto) {
+        logger.info("Adding delivered ingredients for order ID: {}", orderMessageDto.getId());
 
-        Optional<Order> optionalOrder = orderRepository.findById(orderDto.getOrderId());
-
-        if(optionalOrder.isPresent()){
-            Order order = optionalOrder.get();
-            order.setIngredientsReceivedTimestamp(Instant.now());
-            order.setOrderStatus(OrderStatus.INGREDIENTS_RECEIVED);
-            orderRepository.save(order);
-
-            //Finish baking of order
-            bakingService.finishBakeOrder(orderDto.getOrderId());
-        } else{
-            logger.error("Order with Id {} was not found", orderDto.getOrderId());
+        Optional<Order> optionalOrder = orderRepository.findById(orderMessageDto.getId());
+        if (orderMessageDto.getOrderStatus() == ReceivedOrderStatusWarehouse.SUCCESS) {
+            if (optionalOrder.isPresent()) {
+                Order order = optionalOrder.get();
+                order.setIngredientsReceivedTimestamp(Instant.now());
+                order.setOrderStatus(OrderStatus.INGREDIENTS_RECEIVED);
+                orderRepository.save(order);
+                logger.info("Ingredients for order with Id {} received successfully.", orderMessageDto.getId());
+                restSender.sendConfirmation();
+                //Finish baking of order
+                bakingService.finishBakeOrder(orderMessageDto.getId());
+            } else {
+                logger.error("Order with Id {} was not found", orderMessageDto.getId());
+            }
+        } else {
+            if (optionalOrder.isPresent()) {
+                Order order = optionalOrder.get();
+                order.setOrderStatus(OrderStatus.FAILED);
+                orderRepository.save(order);
+                logger.error("Order with Id {} delivery failed.", orderMessageDto.getId());
+            } else {
+                logger.error("Order with Id {} was not found", orderMessageDto.getId());
+            }
         }
     }
 }

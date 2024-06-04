@@ -57,6 +57,11 @@ public class RestSender {
         logger.info("Order ingredients message was successfully posted to the ORDER_INGREDIENT_QUEUE for order: {}", order.getId());
     }
 
+    public void sendConfirmation(){
+        logger.info("Sending confirmation message to warehouse");
+        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "confirm-order-ingredient-queue", "Confirmed: Ingredients received successfully.");
+    }
+
     public Map<UUID, Integer> extractIngredients(List<OrderProduct> orderProducts) {
         Map<UUID, Integer> ingredientQuantityMap = new HashMap<>();
 

@@ -59,7 +59,7 @@ public class RestSender {
 
     public void sendConfirmation(){
         logger.info("Sending confirmation message to warehouse");
-        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "confirm-order-ingredient-queue", new ConfirmationMessage("Confirmed: Ingredients received successfully."));
+        rabbitTemplate.convertAndSend(RabbitTopology.TOPIC_EXCHANGE, "confirm-order-ingredient-queue", "Confirmed: Ingredients received successfully.");
     }
 
     public Map<UUID, Integer> extractIngredients(List<OrderProduct> orderProducts) {

@@ -3,6 +3,7 @@ package be.kdg.sa.bakery.services;
 import be.kdg.sa.bakery.controller.dto.IngredientDto;
 import be.kdg.sa.bakery.domain.Ingredient;
 import be.kdg.sa.bakery.repositories.IngredientRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class IngredientService {
         this.ingredientRepository = ingredientRepository;
     }
 
+    @Transactional
     public void createIngredient(String name){
         logger.info("Creating ingredient with name: {}", name);
         Ingredient ingredient = ingredientRepository.save(new Ingredient(name));

@@ -54,7 +54,7 @@ public class BakingService {
         }
     }
 
-
+    @Transactional
     public void bakingPreparationsOneOrder(UUID id) {
         Optional<Order> optionalOrder = orderRepository.findById(id);
 

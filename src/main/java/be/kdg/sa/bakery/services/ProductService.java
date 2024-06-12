@@ -40,6 +40,7 @@ public class ProductService {
         this.restSender = restSender;
     }
 
+    @Transactional
     public Product createProduct(NewProductDto productDto) {
         logger.info("creating product: {}", productDto);
         if (productDto == null){
@@ -80,6 +81,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Transactional
     public void changeProductState(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
         if(product == null){
@@ -111,6 +113,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public Product editProduct(ProductDto productDto) {
         logger.info("Editing product: {}", productDto);
 
@@ -119,7 +122,6 @@ public class ProductService {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
 
-        //TODO
 
         logger.info("Product edited with id: {}", product.getProductId());
         return productRepository.save(product);

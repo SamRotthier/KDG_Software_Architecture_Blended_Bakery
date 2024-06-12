@@ -41,6 +41,7 @@ public class OrderService {
         this.restSender = restSender;
     }
 
+    @Transactional
     public void addOrder(OrderDto orderDto) {
         logger.info("Adding new order with ID: {}", orderDto.getOrderId());
         Order order = new Order(orderDto.getOrderId(), orderDto.getAccountId());
@@ -72,22 +73,24 @@ public class OrderService {
         logger.info("Products saved successfully.");
     }
 
-    @Transactional
     public List<Order> getAllOpenOrders() {
         logger.info("Fetching all open orders");
         return orderRepository.findByOrderStatusOrderByCreationTimestamp(OrderStatus.OPEN);
     }
 
+    @Transactional
     public void bakeOrder(UUID id) {
         logger.info("Baking preparations for order ID: {}", id);
         bakingService.bakingPreparationsOneOrder(id);
     }
 
+    @Transactional
     public void bakeAllOpenOrders() {
         logger.info("Baking preparations for all open orders");
         bakingService.bakingPreparations();
     }
 
+    @Transactional
     public void receiveDeliveredIngredients(OrderMessageDto orderMessageDto) {
         logger.info("Adding delivered ingredients for order ID: {}", orderMessageDto.getId());
 

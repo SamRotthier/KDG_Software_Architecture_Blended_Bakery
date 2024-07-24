@@ -22,6 +22,8 @@ public class RabbitTopology {
 
     public final static String CONFIRM_ORDER_INGREDIENT_QUEUE = "confirm-order-ingredient-queue";
 
+    public final static String CONFIRM_ORDER_QUEUE = "confirm-order-queue";
+
     public static final String TOPIC_EXCHANGE = "bakery-exchange";
 
 
@@ -102,6 +104,15 @@ public class RabbitTopology {
         return BindingBuilder.bind(newConfirmOrderIngredientQueue()).to(topicExchange()).with(CONFIRM_ORDER_INGREDIENT_QUEUE);
     }
 
+    @Bean
+    public Queue newConfirmOrderQueue() {
+        return new Queue(CONFIRM_ORDER_QUEUE, false);
+    }
+
+    @Bean
+    public Binding topicConfirmOrderBinding() {
+        return BindingBuilder.bind(newConfirmOrderQueue()).to(topicExchange()).with(CONFIRM_ORDER_QUEUE);
+    }
 
     @Bean
     RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory){

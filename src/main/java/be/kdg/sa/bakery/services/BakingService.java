@@ -90,6 +90,7 @@ public class BakingService {
             Order order = optionalOrder.get();
             order.setBakeFinishTimestamp(Instant.now());
             order.setOrderStatus(OrderStatus.DONE);
+            restSender.sendConfirmationClient();
             orderRepository.save(order);
         } else{
             logger.error("Order with Id {} was not found", id);

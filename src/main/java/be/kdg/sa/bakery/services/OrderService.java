@@ -102,7 +102,7 @@ public class OrderService {
                 order.setOrderStatus(OrderStatus.INGREDIENTS_RECEIVED);
                 orderRepository.save(order);
                 logger.info("Ingredients for order with Id {} received successfully.", orderMessageDto.getId());
-                restSender.sendConfirmation();
+                restSender.sendConfirmationWarehouse();
                 //Finish baking of order
                 bakingService.finishBakeOrder(orderMessageDto.getId());
             } else {

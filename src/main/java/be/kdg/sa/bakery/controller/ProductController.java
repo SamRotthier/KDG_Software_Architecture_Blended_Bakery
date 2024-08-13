@@ -98,9 +98,9 @@ public class ProductController {
             //List of ingredients fetched for option selection
             List<IngredientDto> ingredientsList;
             return "products/editProduct";
-            //model.addAttribute("ingredientList", ingredientsList);
+
         } else{
-            return "redirect:/"; // to check error catch
+            return "redirect:/";
         }
     }
 

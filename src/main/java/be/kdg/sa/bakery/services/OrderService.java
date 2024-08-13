@@ -103,7 +103,6 @@ public class OrderService {
                 orderRepository.save(order);
                 logger.info("Ingredients for order with Id {} received successfully.", orderMessageDto.getId());
                 restSender.sendConfirmationWarehouse();
-                //Finish baking of order
                 bakingService.finishBakeOrder(orderMessageDto.getId());
             } else {
                 logger.error("Order with Id {} was not found", orderMessageDto.getId());
